@@ -1,9 +1,5 @@
 package ventana4;
 
-/*TODO
-Emplear seIngreso para modificar labelStatus
-Configurar ventanas externas
- */
 import java.awt.Color;
 import static java.awt.Color.black;
 import static java.awt.Color.gray;
@@ -41,16 +37,12 @@ import javax.swing.table.JTableHeader;
  */
 public class Ventana extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Ventana
-     */
-    int xMouse, yMouse;
-    boolean seIngreso = false;
-
+    int xMouse, yMouse;//Ejes X Y
     Connection con = ConnectionMySQL.connect();//Conexión
-    byte[] photo = null;
+    byte[] photo = null;//Vector para subir imagen
 
     public Ventana() throws SQLException {
+
         setLocationRelativeTo(null);
         initComponents();
         background.requestFocusInWindow();
@@ -572,7 +564,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTextCloseMouseClicked
 
     private void backgroundMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseClicked
-        // TODO add your handling code here:
+
         labelStatus.setVisible(false);
         if (firstNameEntry.hasFocus()) {
             background.requestFocusInWindow();
@@ -643,28 +635,30 @@ public class Ventana extends javax.swing.JFrame {
     private void createModifybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createModifybtnActionPerformed
 
         try {
-            // Validar campos de nombre y apellido
+            // Validar campo de nombre
             if (firstNameEntry.getText().trim().isEmpty() || firstNameEntry.getText().equals("Introduce tu nombre")) {
                 JOptionPane.showMessageDialog(null, "Por favor, ingresa un nombre válido.");
                 return;
             }
+            // Validar campo de Apellido
             if (lastNameEntry.getText().trim().isEmpty() || lastNameEntry.getText().equals("Introduce tu apellido")) {
                 JOptionPane.showMessageDialog(null, "Por favor, ingresa un apellido válido.");
                 return;
             }
+            // Validar campo de Cédula
             if (idEntry.getText().length() < 6) {
-                JOptionPane.showMessageDialog(null, "El ID debe tener al menos 6 dígitos.");
+                JOptionPane.showMessageDialog(null, "La cédula debe tener al menos 6 dígitos.");
                 return;
             }
+            // Validar campo de Télefono
             if (phoneEntry.getText().length() != 12) {
                 JOptionPane.showMessageDialog(null, "El número de teléfono debe tener exactamente 11 dígitos.");
                 return;
             }
+            // Validar campo de Email
             String emailRegex = "^[a-zA-Z0-9._%+-]{6,30}\\@[a-zA-Z0-9_-]{5,10}\\.[a-zA-Z0-9._-]{2,3}$";
             if (!Pattern.matches(emailRegex, emailEntry.getText())) {
                 JOptionPane.showMessageDialog(null, "Por favor, ingresa un correo electrónico válido.");
-                System.out.println(emailRegex);
-                System.out.println(emailEntry.getText());
                 return;
             }
 
@@ -685,7 +679,6 @@ public class Ventana extends javax.swing.JFrame {
                 String birthDateString = formato.format(birthDate);
                 String email = emailEntry.getText();
 
-                //Connection con = ConnectionMySQL.connect();
                 PreparedStatement ps = con.prepareStatement("INSERT INTO registros (name,last_name,identification,phone_number,birth_day,email,photo,active) VALUES (?,?,?,?,?,?,?,?)");
                 ps.setString(1, name);
                 ps.setString(2, lastName);
@@ -699,7 +692,6 @@ public class Ventana extends javax.swing.JFrame {
 
                 loadTable();
                 labelStatus.setVisible(true);
-                //JOptionPane.showMessageDialog(null, "Registro Creado");
                 clear();
 
                 //MODIFICAR REGISTROS
@@ -725,7 +717,6 @@ public class Ventana extends javax.swing.JFrame {
                 if (photo != null) {
                     photoData = photo; // Si se ha subido una foto, establecer el valor del parámetro 7 como la variable photo
                 } else {
-                    Connection con = ConnectionMySQL.connect();
                     PreparedStatement stmt = con.prepareStatement("SELECT photo FROM registros WHERE id=?");
                     stmt.setInt(1, id);
                     ResultSet rs = stmt.executeQuery();
@@ -733,7 +724,6 @@ public class Ventana extends javax.swing.JFrame {
                         photoData = rs.getBytes("photo"); // Si no se ha subido una foto, obtener los datos de lafoto actual en la base de datos y establecer el valor del parámetro 7 como los datos de la foto actual
                     }
                 }
-                Connection con = ConnectionMySQL.connect();
                 PreparedStatement ps = con.prepareStatement("UPDATE  registros SET name=?,last_name=?,identification=?,phone_number=?,birth_day=?,email=?,photo=? WHERE id=?");
                 ps.setString(1, name);
                 ps.setString(2, lastName);
@@ -748,17 +738,18 @@ public class Ventana extends javax.swing.JFrame {
                 loadTable();
                 labelStatus.setVisible(true);
                 labelStatus.setText("Registro modificado correctamente");
-                //OptionPane.showMessageDialog(null, "Registro Modificado");
                 clear();
-                seIngreso = false;
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.toString());
 
         } catch (NullPointerException e) {
-
             labelDateError.setVisible(true);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Ingresa una cédula valida");
         }
+
+
     }//GEN-LAST:event_createModifybtnActionPerformed
 
     private void codeTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codeTextActionPerformed
@@ -773,7 +764,6 @@ public class Ventana extends javax.swing.JFrame {
         int id = Integer.parseInt(codeText.getText());
 
         try {
-            //Connection con = ConnectionMySQL.connect();
             PreparedStatement ps = con.prepareStatement("DELETE FROM registros WHERE id=?");
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -941,11 +931,9 @@ public class Ventana extends javax.swing.JFrame {
             int fila = tableReg.getSelectedRow();
 
             if (fila >= 0) {
-                seIngreso = true;
             }
             int id = Integer.parseInt(tableReg.getValueAt(fila, 0).toString());
 
-            //Connection con = ConnectionMySQL.connect();
             ps = con.prepareStatement("SELECT name,last_name,identification,phone_number,birth_day,email,photo FROM registros WHERE  id =?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -1146,7 +1134,6 @@ public class Ventana extends javax.swing.JFrame {
 
         }
         try {
-            // Connection con = ConnectionMySQL.connect();
             ps = con.prepareStatement("SELECT id,name,last_name,identification FROM registros");
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
