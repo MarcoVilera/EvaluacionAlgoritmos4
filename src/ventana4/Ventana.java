@@ -46,12 +46,12 @@ public class Ventana extends javax.swing.JFrame {
      */
     int xMouse, yMouse;
     boolean seIngreso = false;
-    
+
     Connection con = ConnectionMySQL.connect();//Conexión
     byte[] photo = null;
 
     public Ventana() throws SQLException {
-
+        setLocationRelativeTo(null);
         initComponents();
         background.requestFocusInWindow();
         codeText.setVisible(false);
@@ -121,7 +121,7 @@ public class Ventana extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setLocationByPlatform(true);
+        setLocation(new java.awt.Point(0, 0));
         setUndecorated(true);
 
         background.setBackground(new java.awt.Color(255, 255, 255));
@@ -232,7 +232,7 @@ public class Ventana extends javax.swing.JFrame {
                 codeTextActionPerformed(evt);
             }
         });
-        panelForm.add(codeText, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 20, -1, -1));
+        panelForm.add(codeText, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 20, -1, -1));
 
         firstNameLabel.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         firstNameLabel.setText("Nombre");
@@ -476,6 +476,7 @@ public class Ventana extends javax.swing.JFrame {
 
         background.add(panelForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 580, 530));
 
+        tableReg.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tableReg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -485,7 +486,7 @@ public class Ventana extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "id", "Nombre", "Apellido", "Cedula"
+                "id", "Nombre", "Apellido", "Cédula"
             }
         ) {
             Class[] types = new Class [] {
@@ -537,7 +538,7 @@ public class Ventana extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -610,7 +611,6 @@ public class Ventana extends javax.swing.JFrame {
         tableReg.clearSelection();
     }//GEN-LAST:event_backgroundMouseClicked
 
-    
     //@SuppressWarnings("empty-statement")
     private void selectFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileBtnActionPerformed
         String ruta = "";
@@ -645,7 +645,7 @@ public class Ventana extends javax.swing.JFrame {
         try {
             // Validar campos de nombre y apellido
             if (firstNameEntry.getText().trim().isEmpty() || firstNameEntry.getText().equals("Introduce tu nombre")) {
-                labelStatus.setText("Hubo ");
+                JOptionPane.showMessageDialog(null, "Por favor, ingresa un nombre válido.");
                 return;
             }
             if (lastNameEntry.getText().trim().isEmpty() || lastNameEntry.getText().equals("Introduce tu apellido")) {
