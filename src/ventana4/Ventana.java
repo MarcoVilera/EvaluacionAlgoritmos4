@@ -676,7 +676,7 @@ public class Ventana extends javax.swing.JFrame {
                 //ASIGNACIÓN FORMATO FECHA Y FECHA NACIMIENTO 
                 Date birthDate = birthDateChooser.getDate();
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                String birthDateString = formato.format(birthDate);
+                //String birthDateString = formato.format(birthDate);
                 String email = emailEntry.getText();
 
                 PreparedStatement ps = con.prepareStatement("INSERT INTO registros (name,last_name,identification,phone_number,birth_day,email,photo) VALUES (?,?,?,?,?,?,?)");
@@ -709,7 +709,7 @@ public class Ventana extends javax.swing.JFrame {
                 //ASIGNACIÓN FORMATO FECHA Y FECHA NACIMIENTO 
                 Date birthDate = birthDateChooser.getDate();
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                String birthDateString = formato.format(birthDate);
+                //String birthDateString = formato.format(birthDate);
 
                 String email = emailEntry.getText();
 
