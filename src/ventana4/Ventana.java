@@ -40,7 +40,7 @@ public class Ventana extends javax.swing.JFrame {
     Connection con = ConnectionMySQL.connect();//Conexión
     byte[] photo = null;//Vector para subir imagen
     byte[] photoData = null;
-    Blob blob;
+    Blob blob = null;
 
     public Ventana() throws SQLException {
 
@@ -642,7 +642,8 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_selectFileBtnActionPerformed
 
     private void createModifybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createModifybtnActionPerformed
-
+        System.out.println(blob);
+        System.out.println(photo);
         try {
             // Validar campo de nombre
             if (firstNameEntry.getText().trim().isEmpty() || firstNameEntry.getText().equals("Introduce tu nombre")) {
@@ -684,16 +685,14 @@ public class Ventana extends javax.swing.JFrame {
                 return;
             }
             // Validar si se ha subido una foto
+            if (blob == null && photo == null) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresa una foto válida");
+                return;
+            }/*else if (blob != null && photo == null) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresas una foto válida");
+                return;
+            }*/
 
-            if (blob != null && photo == null) {
-                JOptionPane.showMessageDialog(null, "Por favor ingresa una foto válida");
-                return;
-            }
-            if(blob == null && photo == null){
-                JOptionPane.showMessageDialog(null, "Por favor ingresa una foto válida");
-                return;
-            }
-            
             //CREAR REGISTRO
             if (codeText.getText().isEmpty()) {
                 String name = firstNameEntry.getText();
@@ -981,7 +980,8 @@ public class Ventana extends javax.swing.JFrame {
                 emailEntry.setText(rs.getString("email"));
                 emailEntry.setForeground(black);
 
-                Blob blob = rs.getBlob("photo");
+                blob = rs.getBlob("photo");
+                System.out.println(blob);
                 InputStream inputStream = blob.getBinaryStream();
                 Image image = ImageIO.read(inputStream);
                 ImageIcon imgIcon = new ImageIcon(image.getScaledInstance(imgLabel.getWidth(), imgLabel.getHeight(), image.SCALE_SMOOTH));
@@ -1225,8 +1225,8 @@ public class Ventana extends javax.swing.JFrame {
         emailCheckerLabel.setForeground(new java.awt.Color(204, 51, 0));
         emailEntry.setForeground(gray);
         imgLabel.setIcon(null);
-        blob=null;
-        photo=null;
+        blob = null;
+        photo = null;
 
     }
 
