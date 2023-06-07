@@ -679,7 +679,7 @@ public class Ventana extends javax.swing.JFrame {
                 String birthDateString = formato.format(birthDate);
                 String email = emailEntry.getText();
 
-                PreparedStatement ps = con.prepareStatement("INSERT INTO registros (name,last_name,identification,phone_number,birth_day,email,photo,active) VALUES (?,?,?,?,?,?,?,?)");
+                PreparedStatement ps = con.prepareStatement("INSERT INTO registros (name,last_name,identification,phone_number,birth_day,email,photo) VALUES (?,?,?,?,?,?,?)");
                 ps.setString(1, name);
                 ps.setString(2, lastName);
                 ps.setInt(3, identification);
@@ -687,10 +687,10 @@ public class Ventana extends javax.swing.JFrame {
                 ps.setDate(5, new java.sql.Date(birthDate.getTime()));
                 ps.setString(6, email);
                 ps.setBytes(7, photo);
-                ps.setInt(8, 1);
                 ps.executeUpdate();
 
                 loadTable();
+                labelStatus.setText("Registro creado correctamente");
                 labelStatus.setVisible(true);
                 clear();
 
@@ -736,8 +736,8 @@ public class Ventana extends javax.swing.JFrame {
                 ps.executeUpdate();
 
                 loadTable();
-                labelStatus.setVisible(true);
                 labelStatus.setText("Registro modificado correctamente");
+                labelStatus.setVisible(true);
                 clear();
             }
         } catch (SQLException e) {
