@@ -642,8 +642,8 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_selectFileBtnActionPerformed
 
     private void createModifybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createModifybtnActionPerformed
-        System.out.println(blob);
-        System.out.println(photo);
+        /*System.out.println(blob);
+        System.out.println(photo);*/
         try {
             // Validar campo de nombre
             if (firstNameEntry.getText().trim().isEmpty() || firstNameEntry.getText().equals("Introduce tu nombre")) {
