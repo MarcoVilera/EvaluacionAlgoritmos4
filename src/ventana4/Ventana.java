@@ -16,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +39,8 @@ public class Ventana extends javax.swing.JFrame {
     int xMouse, yMouse;//Ejes X Y
     Connection con = ConnectionMySQL.connect();//Conexión
     byte[] photo = null;//Vector para subir imagen
+    byte[] photoData = null;
+    Blob blob;
 
     public Ventana() throws SQLException {
 
@@ -620,13 +621,21 @@ public class Ventana extends javax.swing.JFrame {
         }
         try {
             File img = new File(ruta);
-            FileInputStream fis = new FileInputStream(img);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
+            String extension = getFileExtension(img).toLowerCase();
+
+            //Validar si el archivo es válido
+            if (extension.equals("png")) {
+                FileInputStream fis = new FileInputStream(img);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                byte[] buf = new byte[1024];
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum);
+                }
+                photo = bos.toByteArray();
+            } else {
+                photo = null;
             }
-            photo = bos.toByteArray();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -637,31 +646,54 @@ public class Ventana extends javax.swing.JFrame {
         try {
             // Validar campo de nombre
             if (firstNameEntry.getText().trim().isEmpty() || firstNameEntry.getText().equals("Introduce tu nombre")) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingresa un nombre válido.");
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un nombre válido.");
                 return;
             }
             // Validar campo de Apellido
             if (lastNameEntry.getText().trim().isEmpty() || lastNameEntry.getText().equals("Introduce tu apellido")) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingresa un apellido válido.");
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un apellido válido.");
                 return;
             }
             // Validar campo de Cédula
+            if (idEntry.getText().trim().isEmpty() || idEntry.getText().equals("Introduce tu cédula")) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresa una cédula válida");
+                return;
+            }
             if (idEntry.getText().length() < 6) {
                 JOptionPane.showMessageDialog(null, "La cédula debe tener al menos 6 dígitos.");
                 return;
             }
             // Validar campo de Télefono
+            if (phoneEntry.getText().trim().isEmpty() || phoneEntry.getText().equals("Introduce tu número telefónico")) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un número de telefono válido");
+                return;
+            }
             if (phoneEntry.getText().length() != 12) {
                 JOptionPane.showMessageDialog(null, "El número de teléfono debe tener exactamente 11 dígitos.");
+                return;
+            }
+            // Validar DateChooser
+            if (birthDateChooser.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Por favor introduce una fecha de nacimiento valida.");
                 return;
             }
             // Validar campo de Email
             String emailRegex = "^[a-zA-Z0-9._%+-]{6,30}\\@[a-zA-Z0-9_-]{5,10}\\.[a-zA-Z0-9._-]{2,3}$";
             if (!Pattern.matches(emailRegex, emailEntry.getText())) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingresa un correo electrónico válido.");
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un correo electrónico válido.");
                 return;
             }
+            // Validar si se ha subido una foto
 
+            if (blob != null && photo == null) {
+                JOptionPane.showMessageDialog(null, "Por favor ingresa una foto válida");
+                return;
+            }
+            if(blob == null && photo == null){
+                JOptionPane.showMessageDialog(null, "Por favor ingresa una foto válida");
+                return;
+            }
+            
             //CREAR REGISTRO
             if (codeText.getText().isEmpty()) {
                 String name = firstNameEntry.getText();
@@ -673,10 +705,7 @@ public class Ventana extends javax.swing.JFrame {
                 int identification = Integer.parseInt(idEntry.getText());
                 String phoneNumber = phoneEntry.getText();
 
-                //ASIGNACIÓN FORMATO FECHA Y FECHA NACIMIENTO 
                 Date birthDate = birthDateChooser.getDate();
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                //String birthDateString = formato.format(birthDate);
                 String email = emailEntry.getText();
 
                 PreparedStatement ps = con.prepareStatement("INSERT INTO registros (name,last_name,identification,phone_number,birth_day,email,photo) VALUES (?,?,?,?,?,?,?)");
@@ -706,14 +735,9 @@ public class Ventana extends javax.swing.JFrame {
                 int identification = Integer.parseInt(idEntry.getText());
                 String phoneNumber = phoneEntry.getText();
 
-                //ASIGNACIÓN FORMATO FECHA Y FECHA NACIMIENTO 
                 Date birthDate = birthDateChooser.getDate();
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                //String birthDateString = formato.format(birthDate);
-
                 String email = emailEntry.getText();
 
-                byte[] photoData = null; // Inicializar como null
                 if (photo != null) {
                     photoData = photo; // Si se ha subido una foto, establecer el valor del parámetro 7 como la variable photo
                 } else {
@@ -1201,6 +1225,8 @@ public class Ventana extends javax.swing.JFrame {
         emailCheckerLabel.setForeground(new java.awt.Color(204, 51, 0));
         emailEntry.setForeground(gray);
         imgLabel.setIcon(null);
+        blob=null;
+        photo=null;
 
     }
 
@@ -1212,6 +1238,12 @@ public class Ventana extends javax.swing.JFrame {
         tableHeader.setFont(new Font("Segoe UI", Font.BOLD, 12));
         tableReg.getColumnModel().getColumn(0).setCellRenderer(centro);
         tableReg.getColumnModel().getColumn(3).setCellRenderer(centro);
+    }
+
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf(".");
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
     }
 
     public static void main(String args[]) {
