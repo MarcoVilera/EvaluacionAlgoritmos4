@@ -71,6 +71,8 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
         background = new javax.swing.JPanel();
         barraHeader = new javax.swing.JPanel();
         btnClose = new javax.swing.JPanel();
@@ -112,6 +114,8 @@ public class Ventana extends javax.swing.JFrame {
         scrollPaneReg = new javax.swing.JScrollPane();
         tableReg = new javax.swing.JTable();
 
+        jScrollPane1.setViewportView(jTextPane1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setLocation(new java.awt.Point(0, 0));
@@ -119,7 +123,7 @@ public class Ventana extends javax.swing.JFrame {
 
         background.setBackground(new java.awt.Color(255, 255, 255));
         background.setForeground(new java.awt.Color(255, 255, 255));
-        background.setPreferredSize(new java.awt.Dimension(1000, 700));
+        background.setPreferredSize(new java.awt.Dimension(1000, 640));
         background.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 backgroundMouseClicked(evt);
@@ -335,7 +339,7 @@ public class Ventana extends javax.swing.JFrame {
         birthDateLabel.setText("Fecha de nacimiento");
         panelForm.add(birthDateLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, -1, 30));
 
-        birthDateChooser.setMaxSelectableDate(new java.util.Date(1703998913000L));
+        birthDateChooser.setMaxSelectableDate(new java.util.Date(1388467913000L));
         birthDateChooser.setMinSelectableDate(new java.util.Date(-2208969027000L));
         birthDateChooser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -467,7 +471,7 @@ public class Ventana extends javax.swing.JFrame {
         labelDateError.setText("Fecha no valida");
         panelForm.add(labelDateError, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 370, 110, -1));
 
-        background.add(panelForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 580, 530));
+        background.add(panelForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 580, 530));
 
         tableReg.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tableReg.setModel(new javax.swing.table.DefaultTableModel(
@@ -521,7 +525,7 @@ public class Ventana extends javax.swing.JFrame {
             tableReg.getColumnModel().getColumn(3).setPreferredWidth(10);
         }
 
-        background.add(scrollPaneReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 150, 340, 520));
+        background.add(scrollPaneReg, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 340, 520));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -531,7 +535,7 @@ public class Ventana extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
         );
 
         pack();
@@ -1227,7 +1231,7 @@ public class Ventana extends javax.swing.JFrame {
         imgLabel.setIcon(null);
         blob = null;
         photo = null;
-
+        deleteBtn.setEnabled(false);
     }
 
     private void render() {
@@ -1316,6 +1320,8 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JLabel idLabelError;
     private javax.swing.JSeparator idSeparator;
     private javax.swing.JLabel imgLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel labelDateError;
     private javax.swing.JLabel labelStatus;
     private javax.swing.JLabel labelTitle;
